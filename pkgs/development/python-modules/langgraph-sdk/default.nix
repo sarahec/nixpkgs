@@ -13,7 +13,9 @@
   typing-extensions,
 
   # passthru
-  writeScript,
+  writers,
+  requests,
+  nix,
 }:
 
 buildPythonPackage rec {
@@ -43,21 +45,16 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "langgraph_sdk" ];
 
-  passthru = {
-    updateScript = writeScript "update.sh" ''
-      #!/usr/bin/env nix-shell
-      #!nix-shell -i bash -p nix-update
-
-      set -eu -o pipefail +e
-      nix-update --commit --version-regex '(.*)' python3Packages.langgraph
-      nix-update --commit --version-regex 'sdk==(.*)' python3Packages.langgraph-sdk
-      nix-update --commit --version-regex 'checkpoint==(.*)' python3Packages.langgraph-checkpoint
-      nix-update --commit --version-regex 'checkpointduckdb==(.*)' python3Packages.langgraph-checkpoint-duckdb
-      nix-update --commit --version-regex 'checkpointpostgres==(.*)' python3Packages.langgraph-checkpoint-postgres
-      nix-update --commit --version-regex 'checkpointsqlite==(.*)' python3Packages.langgraph-checkpoint-sqlite
-    '';
-    skipBulkUpdate = true; # Broken, see https://github.com/NixOS/nixpkgs/issues/379898
-  };
+  passthru.updateScript = writers.writePython3 "langgraph-updater" {
+    libraries = [ requests ];
+    flakeIgnore = [ "E501" ];
+    makeWrapperArgs = [
+      "--prefix"
+      "PATH"
+      ":"
+      (lib.makeBinPath [ nix ])
+    ];
+  } ./update.py;
 
   meta = {
     description = "SDK for interacting with the LangGraph Cloud REST API";
