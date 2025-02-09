@@ -1,6 +1,7 @@
 {
   lib,
   buildPythonPackage,
+  callPackage,
   environs,
   fetchFromGitHub,
   gitpython,
@@ -19,6 +20,9 @@
   wheel,
 }:
 
+let
+  milvus-lite = callPackage ./milvus-lite.nix { };
+in
 buildPythonPackage rec {
   pname = "pymilvus";
   version = "2.5.3";
@@ -47,6 +51,7 @@ buildPythonPackage rec {
   propagatedBuildInputs = [
     environs
     grpcio
+    milvus-lite
     minio
     mmh3
     pandas
