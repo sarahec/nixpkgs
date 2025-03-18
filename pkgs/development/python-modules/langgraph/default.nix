@@ -32,6 +32,9 @@
   syrupy,
   postgresql,
   postgresqlTestHook,
+
+  # passthru
+  nix-update-script,
 }:
 let
   # langgraph-prebuilt isn't meant to be a standalone package but is bundled into langgraph at build time.
@@ -95,6 +98,13 @@ let
       # Is the server running on that host and accepting TCP/IP connections?
       "tests/test_react_agent.py"
     ];
+
+    passthru.updateScript = nix-update-script {
+      extraArgs = [
+        "--version-regex"
+        "prebuilt==([0-9.]+)"
+      ];
+    };
   };
 in
 buildPythonPackage rec {
@@ -185,8 +195,17 @@ buildPythonPackage rec {
   ];
 
   passthru = {
-    inherit (langgraph-sdk) updateScript;
-    skipBulkUpdate = true; # Broken, see https://github.com/NixOS/nixpkgs/issues/379898
+    inherit langgraph-prebuilt;
+    updateScript = nix-update-script {
+      extraArgs = [
+        "--version-regex"
+        "([0-9.]+)"
+        "--subpackage"
+        "langgraph-prebuilt"
+      ];
+    };
+    # Note: You will need to update langgraph-prebuilt manually until the following bug is fixed.
+    skipBulkUpdate = true; # Broken, see https://github.com/Mic92/nix-update/issues/333
   };
 
   meta = {
