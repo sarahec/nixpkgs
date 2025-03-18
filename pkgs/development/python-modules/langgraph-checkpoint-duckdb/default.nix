@@ -2,13 +2,21 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
+
+  # build system
+  poetry-core,
+
+  # dependencies
   langgraph-checkpoint,
   aiosqlite,
   duckdb,
+
+  # testing
   pytest-asyncio,
   pytestCheckHook,
-  langgraph-sdk,
-  poetry-core,
+
+  # passthru
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -45,10 +53,11 @@ buildPythonPackage rec {
 
   disabledTests = [ "test_basic_store_ops" ]; # depends on networking
 
-  passthru = {
-    inherit (langgraph-sdk) updateScript;
-
-    skipBulkUpdate = true; # Broken, see https://github.com/NixOS/nixpkgs/issues/379898
+  passthru.updateScript = nix-update-script {
+    extraArgs = [
+      "--version-regex"
+      "^checkpointduckdb==([0-9.]+)$"
+    ];
   };
 
   meta = {

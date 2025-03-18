@@ -1,19 +1,22 @@
 {
   lib,
   buildPythonPackage,
-  click,
   fetchFromGitHub,
-  poetry-core,
+  pythonOlder,
 
-  # for update script
-  langgraph-sdk,
+  # dependencies
+  click,
+
+  # build-system
+  poetry-core,
 
   # testing
   pytest-asyncio,
   pytestCheckHook,
   docker-compose,
 
-  pythonOlder,
+  # passthru
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -59,9 +62,11 @@ buildPythonPackage rec {
     "test_dockerfile_command_with_docker_compose"
   ];
 
-  passthru = {
-    inherit (langgraph-sdk) updateScript;
-    skipBulkUpdate = true; # Broken, see https://github.com/NixOS/nixpkgs/issues/379898
+  passthru.updateScript = nix-update-script {
+    extraArgs = [
+      "--version-regex"
+      "^cli==([0-9.]+)$"
+    ];
   };
 
   meta = {
