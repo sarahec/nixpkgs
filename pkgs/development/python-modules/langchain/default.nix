@@ -3,7 +3,6 @@
   buildPythonPackage,
   fetchFromGitHub,
   pythonOlder,
-  nix-update-script,
 
   # build-system
   pdm-backend,
@@ -37,6 +36,9 @@
   responses,
   syrupy,
   toml,
+
+  # passthru
+  writeScript,
 }:
 
 buildPythonPackage rec {
@@ -148,12 +150,40 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "langchain" ];
 
-  passthru.updateScript = nix-update-script {
-    extraArgs = [
-      "--version-regex"
-      "^langchain==([0-9.]+)$"
-    ];
-  };
+  passthru.updateScript = writeScript "update.sh" ''
+    #!/usr/bin/env nix-shell
+    #!nix-shell -i bash -p common-updater-scripts
+
+    set -euo pipefail
+
+    declare -a packages=(
+      langchain
+      langchain-aws
+      langchain-azure-dynamic-sessions
+      langchain-chroma
+      langchain-community
+      langchain-core
+      langchain-groq
+      langchain-huggingface
+      langchain-mongodb
+      langchain-ollama
+      langchain-openai
+      langchain-tests
+      langchain-text-splitters
+    )
+
+    tags=$(git ls-remote --tags --refs "https://github.com/langchain-ai/langchain" | cut --delimiter=/ --field=3-)
+
+    for package in $packages
+    do
+      pyPackage="python3Packages.$package"
+      oldVersion="$(nix-instantiate --eval -E "with import ./. {}; lib.getVersion $pyPackage" | tr -d '"')"
+      newVersion=$(echo "$tags" | grep -Po "(?<=$package==)\d+\.\d+\.\d+$" | sort --version-sort --reverse | head -1 )
+      if [ "$newVersion" != "$oldVersion" ]; then
+        update-source-version "$pyPackage" "$newVersion"
+      fi
+    done
+  '';
 
   meta = {
     description = "Building applications with LLMs through composability";
