@@ -2,7 +2,6 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  nix-update-script,
 
   # build-system
   pdm-backend,
@@ -14,6 +13,9 @@
   # tests
   langchain-tests,
   pytestCheckHook,
+
+  # passthru
+  langchain,
 }:
 
 buildPythonPackage rec {
@@ -52,11 +54,8 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "langchain_groq" ];
 
-  passthru.updateScript = nix-update-script {
-    extraArgs = [
-      "--version-regex"
-      "^langchain-groq==([0-9.]+)$"
-    ];
+  passthru = {
+    inherit (langchain) updateScript;
   };
 
   meta = {

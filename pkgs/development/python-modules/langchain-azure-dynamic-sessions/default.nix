@@ -2,7 +2,6 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  nix-update-script,
 
   # build-system
   poetry-core,
@@ -24,6 +23,9 @@
   responses,
   syrupy,
   toml,
+
+  # passthru
+  langchain,
 }:
 
 buildPythonPackage rec {
@@ -72,11 +74,8 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "langchain_azure_dynamic_sessions" ];
 
-  passthru.updateScript = nix-update-script {
-    extraArgs = [
-      "--version-regex"
-      "^langchain-azure-dynamic-sessions==([0-9.]+)$"
-    ];
+  passthru = {
+    inherit (langchain) updateScript;
   };
 
   meta = {

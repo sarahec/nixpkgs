@@ -30,7 +30,7 @@
   syrupy,
 
   # passthru
-  nix-update-script,
+  langchain,
 }:
 
 buildPythonPackage rec {
@@ -95,12 +95,7 @@ buildPythonPackage rec {
       doCheck = true;
     });
 
-    updateScript = nix-update-script {
-      extraArgs = [
-        "--version-regex"
-        "^langchain-core==([0-9.]+)$"
-      ];
-    };
+    inherit (langchain) updateScript;
   };
 
   disabledTests =

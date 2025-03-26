@@ -2,14 +2,22 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  nix-update-script,
+
+  # build-system
+  pdm-backend,
+
+  # dependencies
   chromadb,
   langchain-core,
-  langchain-tests,
   numpy,
-  pdm-backend,
+
+  # tests
+  langchain-tests,
   pytestCheckHook,
   pytest-asyncio,
+
+  # passthru
+  langchain,
 }:
 
 buildPythonPackage rec {
@@ -56,11 +64,8 @@ buildPythonPackage rec {
     "test_chroma_update_document"
   ];
 
-  passthru.updateScript = nix-update-script {
-    extraArgs = [
-      "--version-regex"
-      "^langchain-chroma==([0-9.]+)$"
-    ];
+  passthru = {
+    inherit (langchain) updateScript;
   };
 
   meta = {

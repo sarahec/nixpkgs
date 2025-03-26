@@ -2,7 +2,6 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  nix-update-script,
 
   # build-system
   poetry-core,
@@ -17,6 +16,9 @@
   langchain-tests,
   pytest-asyncio,
   pytestCheckHook,
+
+  # passthru
+  langchain,
 }:
 
 buildPythonPackage rec {
@@ -68,11 +70,8 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "langchain_aws" ];
 
-  passthru.updateScript = nix-update-script {
-    extraArgs = [
-      "--version-regex"
-      "^langchain-aws==([0-9.]+)$"
-    ];
+  passthru = {
+    inherit (langchain) updateScript;
   };
 
   meta = {

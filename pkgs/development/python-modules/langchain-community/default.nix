@@ -2,7 +2,6 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  nix-update-script,
 
   # build-system
   pdm-backend,
@@ -122,11 +121,8 @@ buildPythonPackage rec {
     "test_group_dependencies"
   ];
 
-  passthru.updateScript = nix-update-script {
-    extraArgs = [
-      "--version-regex"
-      "^langchain-community==(.*)"
-    ];
+  passthru = {
+    inherit (langchain) updateScript;
   };
 
   meta = {

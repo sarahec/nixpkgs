@@ -2,7 +2,6 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
-  nix-update-script,
 
   # build-system
   pdm-backend,
@@ -14,6 +13,9 @@
   httpx,
   pytest-asyncio,
   pytestCheckHook,
+
+  # passthru
+  langchain,
 }:
 
 buildPythonPackage rec {
@@ -50,11 +52,8 @@ buildPythonPackage rec {
 
   pytestFlagsArray = [ "tests/unit_tests" ];
 
-  passthru.updateScript = nix-update-script {
-    extraArgs = [
-      "--version-regex"
-      "^langchain-test-splitters==([0-9.]+)$"
-    ];
+  passthru = {
+    inherit (langchain) updateScript;
   };
 
   meta = {
