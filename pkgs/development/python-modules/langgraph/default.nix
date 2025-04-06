@@ -23,6 +23,7 @@
   langgraph-checkpoint-sqlite,
   langsmith,
   psycopg,
+  psycopg-pool,
   pydantic,
   pytest-asyncio,
   pytest-mock,
@@ -83,7 +84,7 @@ buildPythonPackage rec {
     langgraph-checkpoint-sqlite
     langsmith
     psycopg
-    psycopg.pool
+    psycopg-pool
     pydantic
     pytest-asyncio
     pytest-mock
@@ -121,10 +122,7 @@ buildPythonPackage rec {
     "tests/test_pregel_async.py"
   ];
 
-  passthru = {
-    inherit (langgraph-sdk) updateScript;
-    skipBulkUpdate = true; # Broken, see https://github.com/NixOS/nixpkgs/issues/379898
-  };
+  passthru.updateScript = ./update.sh;
 
   meta = {
     description = "Build resilient language agents as graphs";
