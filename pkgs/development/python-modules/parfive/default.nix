@@ -2,6 +2,7 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
+  stdenv,
 
   # build-system
   setuptools-scm,
@@ -23,13 +24,13 @@
 
 buildPythonPackage rec {
   pname = "parfive";
-  version = "2.1.0";
+  version = "2.2.0rc2";
 
   src = fetchFromGitHub {
     owner = "Cadair";
     repo = "parfive";
     tag = "v${version}";
-    hash = "sha256-fzyXKw+/aWlnE09CCHqak8MVIk/kcjXkFyV1EKw2cjA=";
+    hash = "sha256-lGkx6uVRaCnpIKXN8ey4B1SZRg0bhwfuLD5DGOMS2tY=";
   };
 
   pyproject = true;
@@ -53,14 +54,14 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
+  checkInputs = [
+    aioftp
+  ];
+
   disabledTests = [
     # Requires network access
     "test_ftp"
-    "test_ftp_pasv_command"
     "test_ftp_http"
-
-    # flaky comparison between runtime types
-    "test_http_callback_fail"
   ];
 
   # Tests require local network access
