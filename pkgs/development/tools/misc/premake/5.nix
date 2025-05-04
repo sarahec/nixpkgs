@@ -13,7 +13,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "premake5";
-  version = "5.0.0-beta4";
+  version = "5.0.0-beta6";
 
   src = fetchFromGitHub {
     owner = "premake";
@@ -30,11 +30,14 @@ stdenv.mkDerivation (finalAttrs: {
       readline
     ];
 
-  patches = [ ./no-curl-ca.patch ];
   postPatch =
     ''
       substituteInPlace contrib/curl/premake5.lua \
         --replace-fail "ca = nil" "ca = '${cacert}/etc/ssl/certs/ca-bundle.crt'"
+      substituteInPlace premake5.lua \
+        --replace-fail "arch=ARM64" }" "arch=ARM64" or arch=arm64}"
+      substituteInPlace premake5.lua \
+        --replace-fail "{ \"ARM64\", \"ARM64\" }", "{ \"arm64\", \"ARM64\" }",
     ''
     + lib.optionalString stdenv.hostPlatform.isDarwin ''
       substituteInPlace premake5.lua \
