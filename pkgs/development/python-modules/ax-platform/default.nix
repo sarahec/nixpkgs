@@ -25,7 +25,7 @@
 
 buildPythonPackage rec {
   pname = "ax-platform";
-  version = "0.5.0";
+  version = "1.0.0";
   pyproject = true;
 
   disabled = pythonOlder "3.10";
@@ -34,7 +34,7 @@ buildPythonPackage rec {
     owner = "facebook";
     repo = "ax";
     tag = version;
-    hash = "sha256-CMKdnPvzQ9tvU9/01mRaWi/Beuyo19CtaXNJCoiwLOw=";
+    hash = "sha256-DFsV1w6J7bTZNUq9OYExDvfc7IfTcthGKAnRMNujRKI=";
   };
 
   env.ALLOW_BOTORCH_LATEST = "1";
@@ -109,7 +109,7 @@ buildPythonPackage rec {
   meta = {
     description = "Platform for understanding, managing, deploying, and automating adaptive experiments";
     homepage = "https://ax.dev/";
-    changelog = "https://github.com/facebook/Ax/releases/tag/${version}";
+    changelog = "https://github.com/facebook/Ax/releases/tag/${src.tag}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ veprbl ];
   };
