@@ -112,6 +112,16 @@ python.pkgs.buildPythonApplication rec {
     installShellCompletion vectorcode.{bash,zsh}
   '';
 
+  postFixup = ''
+    wrapProgram $out/bin/vectorcode \
+      --prefix PYTHONPATH : "$PYTHONPATH" \
+      --set PATH ${
+        lib.makeBinPath [
+          python
+        ]
+      };
+  '';
+
   pythonImportsCheck = [ "vectorcode" ];
 
   nativeCheckInputs =
