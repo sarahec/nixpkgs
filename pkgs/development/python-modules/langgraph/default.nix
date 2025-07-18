@@ -5,13 +5,14 @@
   fetchFromGitHub,
 
   # build-system
-  poetry-core,
+  hatchling,
 
   # dependencies
   langchain-core,
   langgraph-checkpoint,
   langgraph-prebuilt,
   langgraph-sdk,
+  pydantic,
   xxhash,
 
   # tests
@@ -23,7 +24,6 @@
   langgraph-checkpoint-sqlite,
   langsmith,
   psycopg,
-  pydantic,
   pytest-asyncio,
   pytest-mock,
   pytest-repeat,
@@ -38,14 +38,14 @@
 }:
 buildPythonPackage rec {
   pname = "langgraph";
-  version = "0.4.1";
+  version = "0.5.3";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "langchain-ai";
     repo = "langgraph";
     tag = version;
-    hash = "sha256-bTxtfduuuyRITZqhk15aWwxNwiZ7TMTgBOEPat6zVIc=";
+    hash = "sha256-36Y0gXIbByvjCsJ+x3EWg2uxjwXPAs5iJ96nd0tKmGM=";
   };
 
   postgresqlTestSetupPost = ''
@@ -55,13 +55,14 @@ buildPythonPackage rec {
 
   sourceRoot = "${src.name}/libs/langgraph";
 
-  build-system = [ poetry-core ];
+  build-system = [ hatchling ];
 
   dependencies = [
     langchain-core
     langgraph-checkpoint
     langgraph-prebuilt
     langgraph-sdk
+    pydantic
     xxhash
   ];
 
@@ -113,10 +114,6 @@ buildPythonPackage rec {
     "test_no_modifier"
     "test_pending_writes_resume"
     "test_remove_message_via_state_update"
-
-    # pydantic.errors.PydanticForbiddenQualifier,
-    # see https://github.com/langchain-ai/langgraph/issues/4360
-    "test_state_schema_optional_values"
   ];
 
   disabledTestPaths = [
