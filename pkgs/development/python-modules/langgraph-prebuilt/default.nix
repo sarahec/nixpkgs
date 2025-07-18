@@ -5,7 +5,7 @@
   fetchFromGitHub,
 
   # build-system
-  poetry-core,
+  hatchling,
 
   # dependencies
   langchain-core,
@@ -30,19 +30,19 @@
 # It exists so the langgraph team can iterate on it without having to rebuild langgraph.
 buildPythonPackage rec {
   pname = "langgraph-prebuilt";
-  version = "0.1.8";
+  version = "0.5.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "langchain-ai";
     repo = "langgraph";
     tag = "prebuilt==${version}";
-    hash = "sha256-mYcj7HRbB5H6G0CVLOICKgdtR5Wlv9WeTIBjQJqlhOE=";
+    hash = "sha256-UiFZWtamqczhgZz1qaQiLYdPvvgmqlUXtqYSMhJIyRw=";
   };
 
   sourceRoot = "${src.name}/libs/prebuilt";
 
-  build-system = [ poetry-core ];
+  build-system = [ hatchling ];
 
   dependencies = [
     langchain-core
