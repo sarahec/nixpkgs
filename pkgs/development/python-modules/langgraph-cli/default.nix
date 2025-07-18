@@ -4,10 +4,15 @@
   fetchFromGitHub,
 
   # build-system
-  poetry-core,
+  hatchling,
 
   # dependencies
   click,
+
+  # optional-dependencies
+  langgraph-api
+  langgraph-runtime-inmem
+  python-dotenv
 
   # testing
   pytest-asyncio,
@@ -20,21 +25,29 @@
 
 buildPythonPackage rec {
   pname = "langgraph-cli";
-  version = "0.2.10";
+  version = "0.3.5";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "langchain-ai";
     repo = "langgraph";
     tag = "cli==${version}";
-    hash = "sha256-gSiyFjk1lXiCv7JpX4J00WAPoMv4VsXDuCswbFhP2kY=";
+    hash = "sha256-9eP4HCLIIuRHfXroW6Vm56WyqJdnnrfJnJp32B4ZK7E=";
   };
 
   sourceRoot = "${src.name}/libs/cli";
 
-  build-system = [ poetry-core ];
+  build-system = [ hatchling ];
 
-  dependencies = [ click ];
+  dependencies = [ click langgraph-sdk ];
+
+  optional-dependencies = {
+    "inmem" = [
+      langgraph-api
+      langgraph-runtime-inmem
+      python-dotenv
+    ]
+  }
 
   nativeCheckInputs = [
     pytest-asyncio
