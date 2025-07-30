@@ -11,6 +11,8 @@
   mypy,
 
   # dependencies
+  aiohttp,
+  attrs,
   grpcio,
   grpclib,
   httpx-sse,
@@ -23,6 +25,8 @@
   pydantic,
   python-dateutil,
   rich,
+  reward-kit,
+  toml,
   typing-extensions,
 
   # optional dependencies
@@ -89,14 +93,14 @@ let
 in
 buildPythonPackage rec {
   pname = "fireworks-ai";
-  version = "0.17.16";
+  version = "0.19.14";
   pyproject = true;
 
-  # no source available
+  # no repo
   src = fetchPypi {
     pname = "fireworks_ai";
     inherit version;
-    hash = "sha256-WblcAaYjnzwPS4n5rixNHbHLNGTE3bTPXvQ9lYZ1f9A=";
+    hash = "sha256-m8cw7dTZCtipIEHQDT8t2fhrZmk3mgDGSan1hsmkM9U=";
   };
 
   build-system = [
@@ -108,25 +112,24 @@ buildPythonPackage rec {
   ];
 
   dependencies = [
+    aiohttp
     asyncstdlib-fw
+    attrs
     betterproto-fw
     grpcio
     grpclib
     httpx
-    httpx
     httpx-sse
-    httpx-sse
-    httpx-ws
     httpx-ws
     mmh3
     openai
     pillow
-    pillow
     protobuf
-    pydantic
     pydantic
     python-dateutil
     rich
+    reward-kit
+    toml
     typing-extensions
   ];
 
