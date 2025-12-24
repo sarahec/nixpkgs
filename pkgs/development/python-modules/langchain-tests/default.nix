@@ -84,7 +84,7 @@ buildPythonPackage rec {
   meta = {
     changelog = "https://github.com/langchain-ai/langchain/releases/tag/${src.tag}";
     description = "Build context-aware reasoning applications";
-    homepage = "https://github.com/langchain-ai/langchain";
+    homepage = "https://github.com/langchain-ai/langchain/libs/standard-tests";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [
       natsukium
