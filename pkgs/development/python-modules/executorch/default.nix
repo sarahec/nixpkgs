@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
   pkgs,
   buildPythonPackage,
   fetchFromGitHub,
@@ -30,6 +31,7 @@
   pytorch-tokenizers,
   ruamel-yaml,
   scikit-learn,
+  sqlite,
   sympy,
   tabulate,
   torch,
@@ -141,7 +143,8 @@ buildPythonPackage rec {
     torch
     torchao
     typing-extensions
-  ];
+  ] 
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [ sqlite ];
 
   pythonImportsCheck = [ "executorch" ];
 
