@@ -46,13 +46,14 @@
   # tests
   ipython,
   pytest-datadir,
+  pytest-timeout,
   pytestCheckHook,
   wikipedia-api,
 }:
 
 buildPythonPackage (finalAttrs: {
   pname = "smolagents";
-  version = "1.21.3";
+  version = "1.23.0";
   pyproject = true;
 
   src = fetchFromGitHub {
@@ -125,16 +126,19 @@ buildPythonPackage (finalAttrs: {
   nativeCheckInputs = [
     ipython
     pytest-datadir
+    pytest-timeout
     pytestCheckHook
     wikipedia-api
   ]
-  ++ lib.concatAttrValues finalAttrs.optional-dependencies;
+  ++ lib.concatAttrValues finalAttrs.passthru.optional-dependencies;
 
   pythonImportsCheck = [ "smolagents" ];
 
   disabledTestPaths = [
     # ImportError: cannot import name 'require_soundfile' from 'transformers.testing_utils'
     "tests/test_types.py"
+    # requires optional "vision" dependencies
+    "tests/test_vision_web_browser.py"
   ];
 
   disabledTests = [
@@ -156,6 +160,14 @@ buildPythonPackage (finalAttrs: {
     "test_transformers_toolcalling_agent"
     "test_visit_webpage"
     "test_wikipedia_search"
+    # Requires optional "blaxel" dependencies
+    "test_blaxel_executor_instantiation_with_blaxel_sdk"
+    "test_blaxel_executor_custom_parameters"
+    "test_blaxel_executor_cleanup"
+    # Requires optional "modal" dependencies
+    "test_sandbox_lifecycle"
+    # TypeError: 'function' object is not subscriptable
+    "test_stream_to_gradio_memory_step"
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     # Missing dependencies
