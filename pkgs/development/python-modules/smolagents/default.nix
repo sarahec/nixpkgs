@@ -50,7 +50,7 @@
   wikipedia-api,
 }:
 
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "smolagents";
   version = "1.21.3";
   pyproject = true;
@@ -58,7 +58,7 @@ buildPythonPackage rec {
   src = fetchFromGitHub {
     owner = "huggingface";
     repo = "smolagents";
-    tag = "v${version}";
+    tag = "v${finalAttrs.version}";
     hash = "sha256-X9tJfNxF2icULyma0dWIQEllY9oKaCB+MQ4JJTdzhz4=";
   };
 
@@ -128,7 +128,7 @@ buildPythonPackage rec {
     pytestCheckHook
     wikipedia-api
   ]
-  ++ lib.concatAttrValues optional-dependencies;
+  ++ lib.concatAttrValues finalAttrs.optional-dependencies;
 
   pythonImportsCheck = [ "smolagents" ];
 
@@ -175,8 +175,8 @@ buildPythonPackage rec {
   meta = {
     description = "Barebones library for agents";
     homepage = "https://github.com/huggingface/smolagents";
-    changelog = "https://github.com/huggingface/smolagents/releases/tag/${src.tag}";
+    changelog = "https://github.com/huggingface/smolagents/releases/tag/${finalAttrs.src.tag}";
     license = lib.licenses.asl20;
     maintainers = with lib.maintainers; [ fab ];
   };
-}
+})
