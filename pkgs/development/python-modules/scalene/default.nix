@@ -37,14 +37,14 @@ in
 
 buildPythonPackage rec {
   pname = "scalene";
-  version = "1.5.55";
+  version = "2.0.1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "plasma-umass";
     repo = "scalene";
     tag = "v${version}";
-    hash = "sha256-aO7l/paYqbneDArAbXxptIlMGfvc1dAaFLucEj/7xbk=";
+    hash = "sha256-XxdfAP0Y6mFjyeNvLdTdffSJaByyGIh4uFUX+KwIqD0=";
   };
 
   patches = [
