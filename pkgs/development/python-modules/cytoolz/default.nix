@@ -1,7 +1,7 @@
 {
   lib,
   buildPythonPackage,
-  fetchPypi,
+  fetchFromGitHub,
   pytestCheckHook,
   cython,
   setuptools,
@@ -10,14 +10,16 @@
   python,
 }:
 
-buildPythonPackage rec {
+buildPythonPackage (finalAttrs: {
   pname = "cytoolz";
   version = "1.1.0";
   pyproject = true;
 
-  src = fetchPypi {
-    inherit pname version;
-    hash = "sha256-E6e/JUw8DSixLiKQuCrtDwl3pMKiv4SFT83HeWop87A=";
+  src = fetchFromGitHub {
+    owner = "pytoolz";
+    repo = "cytoolz";
+    tag = finalAttrs.version;
+    hash = "sha256-beOEhm7+Nq7oA7iDcdORz03D1InHmypqsYUDUXEUPC0=";
   };
 
   nativeBuildInputs = [
@@ -36,7 +38,8 @@ buildPythonPackage rec {
 
   meta = {
     homepage = "https://github.com/pytoolz/cytoolz/";
+    changelog = "https://github.com/pytoolz/cytoolz/releases/tag/${finalAttrs.src.tag}";
     description = "Cython implementation of Toolz: High performance functional utilities";
     license = lib.licenses.bsd3;
   };
-}
+})
