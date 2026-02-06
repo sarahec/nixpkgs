@@ -3,6 +3,7 @@
   buildPythonPackage,
   fetchFromGitHub,
   setuptools,
+  json-schema-to-pydantic,
   llm,
   llm-anthropic,
   anthropic,
@@ -30,6 +31,7 @@ buildPythonPackage rec {
 
   dependencies = [
     anthropic
+    json-schema-to-pydantic
     llm
   ];
 
