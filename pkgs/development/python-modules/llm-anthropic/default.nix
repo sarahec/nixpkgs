@@ -51,6 +51,9 @@ buildPythonPackage (finalAttrs: {
     homepage = "https://github.com/simonw/llm-anthropic";
     changelog = "https://github.com/simonw/llm-anthropic/releases/tag/${finalAttrs.src.tag}/CHANGELOG.md";
     license = lib.licenses.asl20;
-    maintainers = with lib.maintainers; [ aos ];
+    maintainers = with lib.maintainers; [
+      aos
+      sarahec
+    ];
   };
 })
