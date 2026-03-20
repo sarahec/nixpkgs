@@ -1,5 +1,6 @@
 {
   lib,
+  stdenv,
   buildPythonPackage,
   fetchFromGitHub,
   pytestCheckHook,
@@ -35,6 +36,14 @@ buildPythonPackage rec {
     "etelemetry"
     "etelemetry.client"
     "etelemetry.config"
+  ];
+
+  disabledTests = lib.optionals stdenv.hostPlatform.isDarwin [
+    # RuntimeError: Connection to server could not be made
+    # due to external network access
+    "test_etrequest"
+    "test_get_project"
+    "test_check_available"
   ];
 
   meta = {
