@@ -1,10 +1,12 @@
 {
   lib,
+  stdenv,
   buildPythonPackage,
   fetchFromGitHub,
 
   # dependencies
   google-generativeai,
+  huggingface-hub,
   joblib,
   networkx,
   numpy,
@@ -21,6 +23,7 @@
   xgboost,
 
   # tests
+  jsonschema,
   pytestCheckHook,
   pytest-cov-stub,
   mock,
@@ -34,12 +37,13 @@ buildPythonPackage (finalAttrs: {
   src = fetchFromGitHub {
     owner = "pgmpy";
     repo = "pgmpy";
-    rev = "197e1e0444c77c00581a4c32763811e5b03f8503";
-    hash = "sha256-TCnn3GrITW8HCrYVeeythiULV130b6uulkijkPpJOqA=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-qZoyeUaRsatWUiFoL1VaRqApjM/AFS8xqTjVBcUpYas=";
   };
 
   dependencies = [
     google-generativeai
+    huggingface-hub
     joblib
     networkx
     numpy
@@ -71,6 +75,15 @@ buildPythonPackage (finalAttrs: {
     # AssertionError
     "test_estimate_example_smoke_test"
     "test_gcm"
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    # Failures due to numeric precision differences on Darwin
+    "test_generalized_cov_approx"
+    "test_hotelling_indep"
+    "test_roys_no_cond"
+    "test_roys_indep"
+    "test_roys_dependent"
+    "test_wilks_indep"
   ];
 
   enabledTestPaths = [
@@ -87,8 +100,8 @@ buildPythonPackage (finalAttrs: {
   ];
 
   nativeCheckInputs = [
+    jsonschema
     pytestCheckHook
-    # xdoctest
     pytest-cov-stub
     mock
     writableTmpDirAsHomeHook
@@ -99,7 +112,7 @@ buildPythonPackage (finalAttrs: {
   meta = {
     description = "Python Library for learning (Structure and Parameter), inference (Probabilistic and Causal), and simulations in Bayesian Networks";
     homepage = "https://github.com/pgmpy/pgmpy";
-    # changelog = "https://github.com/pgmpy/pgmpy/releases/tag/${finalAttrs.src.tag}";
+    changelog = "https://github.com/pgmpy/pgmpy/releases/tag/${finalAttrs.src.tag}";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [
       happysalada
