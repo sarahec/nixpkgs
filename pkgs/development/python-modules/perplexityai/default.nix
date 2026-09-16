@@ -34,7 +34,7 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "perplexityai";
-  version = "0.42.0";
+  version = "0.43.5";
   pyproject = true;
   __structuredAttrs = true;
 
@@ -42,7 +42,7 @@ buildPythonPackage (finalAttrs: {
     owner = "perplexityai";
     repo = "perplexity-py";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-/JXcWvKTspVSoRrnHYoyhjZQsOaMZE/Xj1lVI3JKyTQ=";
+    hash = "sha256-qeNhjCVGPqe+R7jGTEbHeoBYXt/Cnd/MQWARJic2/Nc=";
   };
 
   # Can't use relaxPythonDeps as this is a version lock in the build system
