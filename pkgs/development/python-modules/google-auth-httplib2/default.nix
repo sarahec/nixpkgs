@@ -9,6 +9,9 @@
   mock,
   pytest-localserver,
   pytestCheckHook,
+
+  # update
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -18,10 +21,12 @@ buildPythonPackage rec {
 
   src = fetchFromGitHub {
     owner = "googleapis";
-    repo = "google-auth-library-python-httplib2";
-    tag = "v${version}";
-    hash = "sha256-NXz2oqbNVGTWOECH+Ly9v/CMxbhygFZhlHRHrnYLhCg=";
+    repo = "google-cloud-python";
+    tag = "google-auth-httplib2-v${version}";
+    hash = "sha256-k9lW26ni0vD6Y5dpluBAI0aKkJOH/9QtLj7ZgMroWJ0=";
   };
+
+  sourceRoot = "${src.name}/packages/google-auth-httplib2";
 
   build-system = [ setuptools ];
 
@@ -39,10 +44,24 @@ buildPythonPackage rec {
     pytest-localserver
   ];
 
+  # The ATOM feed loses this update most of the time due to a high update volume,
+  # so query github directly.
+  passthru = {
+    # bulk updater uses wrong tag
+    skipBulkUpdate = true;
+    updateScript = nix-update-script {
+      extraArgs = [
+        "--version-regex"
+        "google-auth-httplib2-v([0-9.]+)"
+        "--use-github-releases"
+      ];
+    };
+  };
+
   meta = {
     description = "Google Authentication Library: httplib2 transport";
-    homepage = "https://github.com/GoogleCloudPlatform/google-auth-library-python-httplib2";
-    changelog = "https://github.com/googleapis/google-auth-library-python-httplib2/blob/v${version}/CHANGELOG.md";
+    homepage = "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-auth-httplib2";
+    changelog = "https://github.com/googleapis/google-cloud-python/blob/google-auth-httplib2-v${version}/packages/google-auth-httplib2/CHANGELOG.md";
     license = lib.licenses.asl20;
     maintainers = [ lib.maintainers.sarahec ];
   };
