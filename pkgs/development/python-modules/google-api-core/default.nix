@@ -2,11 +2,14 @@
   lib,
   buildPythonPackage,
   fetchFromGitHub,
+  aiohttp,
   google-auth,
   googleapis-common-protos,
   grpcio,
-  grpcio-gcp,
   grpcio-status,
+  opentelemetry-api,
+  opentelemetry-instrumentation-grpc,
+  opentelemetry-sdk,
   proto-plus,
   protobuf,
   pytest-asyncio,
@@ -21,14 +24,14 @@
 
 buildPythonPackage rec {
   pname = "google-api-core";
-  version = "2.29.0";
+  version = "2.43.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "googleapis";
     repo = "google-cloud-python";
     tag = "google-api-core-v${version}";
-    hash = "sha256-/5P6zgeK1enOVpi4Vx18BQrs66coPJzSwwy7AYfbBJk=";
+    hash = "sha256-sCC5tXBWQt1eeCCJP8NmmGrQvQYI7Djh4YyLR82Sfp4=";
   };
 
   sourceRoot = "${src.name}/packages/google-api-core";
@@ -38,21 +41,29 @@ buildPythonPackage rec {
   dependencies = [
     googleapis-common-protos
     google-auth
+    opentelemetry-api
     protobuf
     proto-plus
     requests
   ];
 
-  pythonRelaxDeps = [ "protobuf" ];
+  pythonRelaxDeps = [
+    "opentelemetry-api"
+    "protobuf"
+  ];
 
   optional-dependencies = {
-    async_rest = [ google-auth ] ++ google-auth.optional-dependencies.aiohttp;
+    async_rest = [
+      aiohttp
+      google-auth
+    ]
+    ++ google-auth.optional-dependencies.aiohttp;
     grpc = [
       grpcio
       grpcio-status
     ];
-    grpcgcp = [ grpcio-gcp ];
-    grpcio-gcp = [ grpcio-gcp ];
+    tracing = [ opentelemetry-instrumentation-grpc ];
+    testing = [ opentelemetry-sdk ];
   };
 
   nativeCheckInputs = [
