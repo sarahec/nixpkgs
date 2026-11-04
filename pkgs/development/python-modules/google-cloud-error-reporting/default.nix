@@ -17,6 +17,9 @@
   mock,
   pytest-asyncio,
   pytestCheckHook,
+
+  # update
+  nix-update-script,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -26,12 +29,13 @@ buildPythonPackage (finalAttrs: {
 
   src = fetchFromGitHub {
     owner = "googleapis";
-    repo = "python-error-reporting";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-do/pxm+Bo2c57ehg1cRlpax+UggSUMv8WSK30sXhHpo=";
+    repo = "google-cloud-python";
+    tag = "google-cloud-error-reporting-v${finalAttrs.version}";
+    hash = "sha256-xZi39AKlfJJTkRiy7tCNxUKMTA/9RDcYyOa7ZucaBBM=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/packages/google-cloud-error-reporting";
+
   build-system = [ setuptools ];
 
   pythonRelaxDeps = [ "protobuf" ];
@@ -59,6 +63,13 @@ buildPythonPackage (finalAttrs: {
     "test_namespace_package_compat"
   ];
 
+  disabledTestPaths = [
+    # RuntimeError: There is no current event loop in thread 'MainThread'.
+    "tests/unit/gapic/errorreporting_v1beta1/test_error_group_service.py"
+    "tests/unit/gapic/errorreporting_v1beta1/test_error_stats_service.py"
+    "tests/unit/gapic/errorreporting_v1beta1/test_report_errors_service.py"
+  ];
+
   preCheck = ''
     # prevent google directory from shadowing google imports
     rm -r google
@@ -69,10 +80,24 @@ buildPythonPackage (finalAttrs: {
     "google.cloud.errorreporting_v1beta1"
   ];
 
+  # The ATOM feed loses this update most of the time due to a high update volume,
+  # so query github directly.
+  passthru = {
+    # bulk updater uses wrong tag
+    skipBulkUpdate = true;
+    updateScript = nix-update-script {
+      extraArgs = [
+        "--version-regex"
+        "google-cloud-error-reporting-v([0-9.]+)"
+        "--use-github-releases"
+      ];
+    };
+  };
+
   meta = {
     description = "Stackdriver Error Reporting API client library";
-    homepage = "https://github.com/googleapis/python-error-reporting";
-    changelog = "https://github.com/googleapis/python-error-reporting/blob/${finalAttrs.src.tag}/CHANGELOG.md";
+    homepage = "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-cloud-error-reporting";
+    changelog = "https://github.com/googleapis/google-cloud-python/blob/google-cloud-error-reporting-${finalAttrs.src.tag}/packages/google-cloud-error-reporting/CHANGELOG.md";
     license = lib.licenses.asl20;
     maintainers = [ lib.maintainers.sarahec ];
   };
