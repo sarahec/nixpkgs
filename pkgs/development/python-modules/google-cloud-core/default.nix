@@ -16,14 +16,14 @@
 
 buildPythonPackage rec {
   pname = "google-cloud-core";
-  version = "2.5.1";
+  version = "2.8.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "googleapis";
     repo = "google-cloud-python";
     tag = "google-cloud-core-v${version}";
-    hash = "sha256-lfB544cDaywiGTV0KlecU7oEl2Gbb4Ou8UCp+YjGtOA=";
+    hash = "sha256-7o12zeYleF5rcowejoeKvMJDBiXl/t2vZIqYpQb6Z8k=";
   };
 
   sourceRoot = "${src.name}/packages/google-cloud-core";
