@@ -8,7 +8,9 @@
 
   # dependencies
   google-api-core,
+  google-auth,
   google-cloud-logging,
+  grpcio,
   proto-plus,
   protobuf,
 
@@ -24,14 +26,14 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "google-cloud-error-reporting";
-  version = "1.14.0";
+  version = "1.17.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "googleapis";
     repo = "google-cloud-python";
     tag = "google-cloud-error-reporting-v${finalAttrs.version}";
-    hash = "sha256-xZi39AKlfJJTkRiy7tCNxUKMTA/9RDcYyOa7ZucaBBM=";
+    hash = "sha256-b0FYupZU0ZNeIL9xJIqEXgg7ToRCQLjiswJ67YzX7OI=";
   };
 
   sourceRoot = "${finalAttrs.src.name}/packages/google-cloud-error-reporting";
@@ -42,7 +44,9 @@ buildPythonPackage (finalAttrs: {
 
   dependencies = [
     google-api-core
+    google-auth
     google-cloud-logging
+    grpcio
     proto-plus
     protobuf
   ]
