@@ -8,9 +8,14 @@
 
   # dependencies
   google-api-core,
+  google-auth,
   google-cloud-core,
+  google-cloud-monitoring,
   google-crc32c,
   grpc-google-iam-v1,
+  grpcio,
+  opentelemetry-api,
+  opentelemetry-sdk,
   proto-plus,
   protobuf,
 
@@ -18,8 +23,8 @@
   libcst,
 
   # testing
-  grpcio,
   mock,
+  pytest-asyncio,
   pytestCheckHook,
 
   # update
@@ -28,13 +33,13 @@
 
 buildPythonPackage rec {
   pname = "google-cloud-bigtable";
-  version = "2.35.0";
+  version = "2.50.2";
 
   src = fetchFromGitHub {
     owner = "googleapis";
     repo = "google-cloud-python";
     tag = "google-cloud-bigtable-v${version}";
-    hash = "sha256-icJUy2iHqrO0Om6WTj31f6JWtnv9BXiFoTD0ZZCmXJ4=";
+    hash = "sha256-JFfLSMoa6gxREaG25oauufAyHq53SwtqPgWlB5KVebA=";
   };
 
   sourceRoot = "${src.name}/packages/google-cloud-bigtable";
@@ -49,9 +54,14 @@ buildPythonPackage rec {
 
   dependencies = [
     google-api-core
+    google-auth
     google-cloud-core
+    google-cloud-monitoring
     google-crc32c
+    grpcio
     grpc-google-iam-v1
+    opentelemetry-api
+    opentelemetry-sdk
     proto-plus
     protobuf
   ]
@@ -62,17 +72,27 @@ buildPythonPackage rec {
   };
 
   nativeCheckInputs = [
-    grpcio
     mock
+    pytest-asyncio
     pytestCheckHook
   ];
 
-  checkPhase = ''
+  preCheck = ''
     # Prevent google directory from shadowing google imports
     rm -r google
   '';
 
   disabledTests = [ "policy" ];
+
+  disabledTestPaths = [
+    # requires credentials
+    "samples/"
+    "tests/system"
+    # duplicate protobuf symbols
+    "test_proxy/"
+    # checks generated files are in sync with .cross_sync codegen
+    "tests/unit/data/test_sync_up_to_date.py"
+  ];
 
   pythonImportsCheck = [
     "google.cloud.bigtable_admin_v2"
