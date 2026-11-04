@@ -21,6 +21,9 @@
   grpcio,
   mock,
   pytestCheckHook,
+
+  # update
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -29,10 +32,12 @@ buildPythonPackage rec {
 
   src = fetchFromGitHub {
     owner = "googleapis";
-    repo = "python-bigtable";
-    tag = "v${version}";
-    hash = "sha256-rvw7mHWifJ6+g89DXtV0pOFwbbGQNlK1J+IRhy/7W5o=";
+    repo = "google-cloud-python";
+    tag = "google-cloud-bigtable-v${version}";
+    hash = "sha256-icJUy2iHqrO0Om6WTj31f6JWtnv9BXiFoTD0ZZCmXJ4=";
   };
+
+  sourceRoot = "${src.name}/packages/google-cloud-bigtable";
 
   pyproject = true;
 
@@ -75,10 +80,24 @@ buildPythonPackage rec {
     "google.cloud.bigtable"
   ];
 
+  # The ATOM feed loses this update most of the time due to a high update volume,
+  # so query github directly.
+  passthru = {
+    # bulk updater uses wrong tag
+    skipBulkUpdate = true;
+    updateScript = nix-update-script {
+      extraArgs = [
+        "--version-regex"
+        "google-cloud-bigtable-v([0-9.]+)"
+        "--use-github-releases"
+      ];
+    };
+  };
+
   meta = {
     description = "Google Cloud Bigtable API client library";
-    homepage = "https://github.com/googleapis/python-bigtable";
-    changelog = "https://github.com/googleapis/python-bigtable/blob/${src.tag}/CHANGELOG.md";
+    homepage = "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-cloud-bigtable";
+    changelog = "https://github.com/googleapis/google-cloud-python/blob/google-cloud-bigtable-v${version}/packages/google-cloud-bigtable/CHANGELOG.md";
     license = lib.licenses.asl20;
     maintainers = [ lib.maintainers.sarahec ];
   };
