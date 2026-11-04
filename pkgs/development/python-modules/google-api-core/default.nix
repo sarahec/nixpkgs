@@ -14,6 +14,9 @@
   pytestCheckHook,
   requests,
   setuptools,
+
+  # update
+  nix-update-script,
 }:
 
 buildPythonPackage rec {
@@ -23,10 +26,12 @@ buildPythonPackage rec {
 
   src = fetchFromGitHub {
     owner = "googleapis";
-    repo = "python-api-core";
-    tag = "v${version}";
-    hash = "sha256-wqDGtCYAH2f+P3zUfXgiQTePLr7a0qzUTeEc6pdCGio=";
+    repo = "google-cloud-python";
+    tag = "google-api-core-v${version}";
+    hash = "sha256-/5P6zgeK1enOVpi4Vx18BQrs66coPJzSwwy7AYfbBJk=";
   };
+
+  sourceRoot = "${src.name}/packages/google-api-core";
 
   build-system = [ setuptools ];
 
@@ -82,14 +87,28 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "google.api_core" ];
 
+  # The ATOM feed loses this update most of the time due to a high update volume,
+  # so query github directly.
+  passthru = {
+    # bulk updater uses wrong tag
+    skipBulkUpdate = true;
+    updateScript = nix-update-script {
+      extraArgs = [
+        "--version-regex"
+        "google-api-core-v([0-9.]+)"
+        "--use-github-releases"
+      ];
+    };
+  };
+
   meta = {
     description = "Core Library for Google Client Libraries";
     longDescription = ''
       This library is not meant to stand-alone. Instead it defines common
       helpers used by all Google API clients.
     '';
-    homepage = "https://github.com/googleapis/python-api-core";
-    changelog = "https://github.com/googleapis/python-api-core/blob/${src.tag}/CHANGELOG.md";
+    homepage = "https://github.com/googleapis/google-cloud-python/tree/main/packages/google-api-core";
+    changelog = "https://github.com/googleapis/google-cloud-python/blob/google-api-core-v${version}/packages/google-api-core/CHANGELOG.md";
     license = lib.licenses.asl20;
     maintainers = with lib.maintainers; [
       sarahec
