@@ -16,14 +16,14 @@
 
 buildPythonPackage rec {
   pname = "google-auth-httplib2";
-  version = "0.3.0";
+  version = "0.4.4";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "googleapis";
     repo = "google-cloud-python";
     tag = "google-auth-httplib2-v${version}";
-    hash = "sha256-k9lW26ni0vD6Y5dpluBAI0aKkJOH/9QtLj7ZgMroWJ0=";
+    hash = "sha256-b0FYupZU0ZNeIL9xJIqEXgg7ToRCQLjiswJ67YzX7OI=";
   };
 
   sourceRoot = "${src.name}/packages/google-auth-httplib2";
