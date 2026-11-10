@@ -17,14 +17,14 @@
 
 buildPythonPackage rec {
   pname = "google-cloud-iam";
-  version = "2.26.0";
+  version = "2.27.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "googleapis";
     repo = "google-cloud-python";
     tag = "google-cloud-iam-v${version}";
-    hash = "sha256-b0FYupZU0ZNeIL9xJIqEXgg7ToRCQLjiswJ67YzX7OI=";
+    hash = "sha256-OWN6yJq+crjkfnNb+CZ8XGuUvkYP3dHz1reHqlRuKG0=";
   };
 
   sourceRoot = "${src.name}/packages/google-cloud-iam";
