@@ -161,6 +161,7 @@ buildPythonPackage (finalAttrs: {
     homepage = "https://github.com/open-mmlab/mmcv";
     changelog = "https://github.com/open-mmlab/mmcv/releases/tag/${finalAttrs.src.tag}";
     license = lib.licenses.asl20;
+    broken = stdenv.hostPlatform.isDarwin; # numerous compile errors in torch includes
     maintainers = with lib.maintainers; [ rxiao ];
   };
 })
