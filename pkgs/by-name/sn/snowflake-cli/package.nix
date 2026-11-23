@@ -183,6 +183,8 @@ python3Packages.buildPythonApplication (finalAttrs: {
       --zsh <($out/bin/snow --show-completion zsh)
   '';
 
+  __darwinAllowLocalNetworking = true;
+
   meta = {
     changelog = "https://github.com/snowflakedb/snowflake-cli/blob/${finalAttrs.src.tag}/RELEASE-NOTES.md";
     homepage = "https://docs.snowflake.com/en/developer-guide/snowflake-cli-v2/index";

@@ -119,8 +119,11 @@ buildPythonPackage (finalAttrs: {
     "tests/test_uv_workflows.py"
 
     # flaky
+    "tests/lib/test_azure_redirects.py::test_async_redirect_origin"
     "tests/lib/test_azure_redirects.py::test_sync_redirect_origin"
   ];
+
+  __darwinAllowLocalNetworking = true;
 
   meta = {
     description = "Python client library for the OpenAI API";

@@ -135,6 +135,8 @@ buildPythonPackage (finalAttrs: {
     "-Wignore::DeprecationWarning"
   ];
 
+  __darwinAllowLocalNetworking = true;
+
   meta = {
     description = "Anthropic's safety-first language model APIs";
     homepage = "https://github.com/anthropics/anthropic-sdk-python";

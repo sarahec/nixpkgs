@@ -118,6 +118,8 @@ buildPythonPackage rec {
 
   pythonImportsCheck = [ "limits" ];
 
+  __darwinAllowLocalNetworking = true;
+
   meta = {
     description = "Rate limiting using various strategies and storage backends such as redis & memcached";
     homepage = "https://github.com/alisaifee/limits";

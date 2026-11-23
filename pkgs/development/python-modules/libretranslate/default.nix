@@ -101,6 +101,11 @@ buildPythonPackage (finalAttrs: {
   pythonImportsCheck = lib.optional (!isAarch64Linux) "libretranslate";
   doCheck = !isAarch64Linux;
 
+  disabledTests = lib.optionals stdenv.hostPlatform.isDarwin [
+    # AssertionError: assert '99' not in '===========...============'
+    "test_long_locals_follow_verbosity"
+  ];
+
   passthru = {
     static-compressed =
       runCommand "libretranslate-data-compressed"

@@ -161,9 +161,14 @@ buildPythonPackage (finalAttrs: {
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     # Failures due to numeric precision differences on Darwin
+    "test_fisher_z_residual"
     "test_generalized_cov_approx"
+    "test_hotelling_approx"
+    "test_pearsonr_residual"
+    "test_roys_approx"
     "test_roys_no_cond"
     "test_roys_dependent"
+    "test_wilks_approx"
     "test_wilks_indep"
   ];
 

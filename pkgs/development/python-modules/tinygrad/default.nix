@@ -181,6 +181,10 @@ buildPythonPackage (finalAttrs: {
     "tinygrad.runtime.ops_metal"
   ];
 
+  sandboxProfile = ''
+    (allow file-read-metadata (subpath "/usr/local/lib" "/opt/homebrew/lib"))
+  '';
+
   nativeCheckInputs = [
     llvmPackages.clang
     pytestCheckHook
